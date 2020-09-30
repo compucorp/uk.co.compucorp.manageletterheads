@@ -132,4 +132,3 @@ function manageletterheads_civicrm_alterSettingsFolders(&$metaDataFolders = NULL
 function manageletterheads_civicrm_entityTypes(&$entityTypes) {
   _manageletterheads_civix_civicrm_entityTypes($entityTypes);
 }
-
