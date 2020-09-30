@@ -132,3 +132,13 @@ function manageletterheads_civicrm_alterSettingsFolders(&$metaDataFolders = NULL
 function manageletterheads_civicrm_entityTypes(&$entityTypes) {
   _manageletterheads_civix_civicrm_entityTypes($entityTypes);
 }
+
+/**
+ * Implements hook_civicrm_permission().
+ */
+function manageletterheads_civicrm_permission(&$permissions) {
+  $permissions['manage letterheads'] = [
+    ts('CiviCRM: manage letterheads'),
+    ts('Allows managing of a list of letterheads that can be selected by users when creating emails and PDF letters'),
+  ];
+}
