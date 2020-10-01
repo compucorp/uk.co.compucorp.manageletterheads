@@ -9,6 +9,12 @@ require_once 'manageletterheads.civix.php';
  */
 function manageletterheads_civicrm_config(&$config) {
   _manageletterheads_civix_civicrm_config($config);
+
+  Civi::dispatcher()->addListener(
+    'civi.api.respond',
+    ['CRM_ManageLetterheads_Event_Listener_LetterheadExtraFields', 'onRespond'],
+    10
+  );
 }
 
 /**
