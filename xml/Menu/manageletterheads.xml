@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/lettersheads/list</path>
+    <page_callback>CRM_ManageLetterheads_Page_LetterheadsListPage</page_callback>
+    <title>Letterheads List</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
