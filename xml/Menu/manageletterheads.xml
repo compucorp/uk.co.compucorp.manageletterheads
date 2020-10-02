@@ -6,4 +6,10 @@
     <title>Letterheads List</title>
     <access_arguments>manage letterheads</access_arguments>
   </item>
+  <item>
+    <path>civicrm/lettersheads/add</path>
+    <page_callback>CRM_ManageLetterheads_Form_AddLetterheadForm</page_callback>
+    <title>Create Letterhead</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>
