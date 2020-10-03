@@ -11,16 +11,35 @@ class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
    * Adds the form fields and buttons.
    */
   public function buildQuickForm() {
-    $this->add('text', 'title', ts('Title'));
+    $this->addFormElements();
+    $this->setDefaultWeight();
+    $this->assign('elementNames', $this->getRenderableElementNames());
+    parent::buildQuickForm();
+  }
+
+  /**
+   * Adds the form elements including fields and buttons.
+   */
+  private function addFormElements() {
+    $this->add('text', 'title', ts('Title'), NULL, TRUE);
     $this->add('textarea', 'description', ts('Description'));
-    $this->add('wysiwyg', 'content', ts('Content'));
+    $this->add('wysiwyg', 'content', ts('Content'), NULL, TRUE);
     $this->addCheckbox(
       'available_for',
       ts('Available For'),
-      array_flip(LetterheadAvailability::buildOptions('available_for'))
+      array_flip(LetterheadAvailability::buildOptions('available_for')),
+      NULL,
+      NULL,
+      TRUE
     );
     $this->add('text', 'weight', ts('Order'));
-    $this->addCheckbox('is_active', ts('Enabled'), ['' => '1']);
+    $this->addCheckbox(
+      'is_active',
+      ts('Enabled'),
+      ['' => 1],
+      NULL,
+      ['checked' => 'checked']
+    );
 
     $this->addButtons([
       [
@@ -29,9 +48,30 @@ class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
         'isDefault' => TRUE,
       ],
     ]);
+  }
 
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
+  /**
+   * Sets the default value of the "order" (weight) field.
+   *
+   * The value is the highest weight value currently recorded, plus 1.
+   */
+  private function setDefaultWeight() {
+    $lastLetterheadWeightValue = 0;
+    $lastLetterheadByWeight = civicrm_api3('Letterhead', 'get', [
+      'sequential' => 1,
+      'options' => [
+        'limit' => '1',
+        'order_by' => 'weight DESC',
+      ],
+    ]);
+
+    if ($lastLetterheadByWeight['count']) {
+      $lastLetterheadWeightValue = $lastLetterheadByWeight['values'][0]['weight'];
+    }
+
+    $this->setDefaults([
+      'weight' => $lastLetterheadWeightValue + 1,
+    ]);
   }
 
   /**
