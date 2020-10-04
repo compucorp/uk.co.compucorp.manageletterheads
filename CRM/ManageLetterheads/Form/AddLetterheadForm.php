@@ -18,6 +18,53 @@ class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
   }
 
   /**
+   * Handles the letterhead creation process.
+   */
+  public function postProcess() {
+    $formValues = $this->controller->exportValues($this->_name);
+
+    $this->createLetterhead($formValues);
+    $this->addSuccessMessage();
+    $this->redirectToLetterheadsListPage();
+  }
+
+  /**
+   * Creates the letterhead using the given form values.
+   */
+  private function createLetterhead($formValues) {
+    $letterhead = [
+      'title' => $formValues['title'],
+      'description' => $formValues['description'],
+      'content' => $formValues['content'],
+      'available_for' => array_keys($formValues['available_for']),
+      'weight' => $formValues['weight'],
+      'is_active' => isset($formValues['is_active']) ? '1' : '0',
+    ];
+
+    civicrm_api3('Letterhead', 'create', $letterhead);
+  }
+
+  /**
+   * Displays a success message after the letterhead has been created.
+   */
+  private function addSuccessMessage() {
+    CRM_Core_Session::setStatus(
+      ts('Letterhead has been saved.'),
+      ts('Saved'),
+      'success'
+    );
+  }
+
+  /**
+   * Redirects the user to the list page.
+   */
+  private function redirectToLetterheadsListPage() {
+    $url = CRM_Utils_System::url('civicrm/letterheads/list', NULL, TRUE);
+
+    CRM_Utils_System::redirect($url);
+  }
+
+  /**
    * Adds the form elements including fields and buttons.
    */
   private function addFormElements() {
