@@ -61,7 +61,7 @@ class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
       'sequential' => 1,
       'options' => [
         'limit' => '1',
-        'order_by' => 'weight DESC',
+        'sort' => 'weight DESC',
       ],
     ]);
 
