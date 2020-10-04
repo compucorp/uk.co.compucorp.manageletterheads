@@ -14,6 +14,7 @@ class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
     $this->addFormElements();
     $this->setDefaultWeight();
     $this->assign('elementNames', $this->getRenderableElementNames());
+    $this->preventAjaxSubmit();
     parent::buildQuickForm();
   }
 

@@ -3,10 +3,13 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="text-right">
-          <button class="btn btn-large btn-primary">
+          <a
+            class="crm-popup btn btn-large btn-primary"
+            href="{crmURL p='civicrm/letterheads/add'}"
+          >
             <i class="fa fa-plus-circle"></i>
-            Create new letterhead
-          </button>
+            {ts}Create new letterhead{/ts}
+          </a>
         </div>
         {if !count($letterheads)}
           <div class="crm-case-custom-form-block-empty text-center clearfix">
