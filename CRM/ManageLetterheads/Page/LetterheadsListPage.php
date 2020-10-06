@@ -1,5 +1,7 @@
 <?php
 
+use CRM_ManageLetterheads_BAO_LetterheadAvailability as LetterheadAvailability;
+
 /**
  * LetterheadsListPage class.
  *
@@ -17,28 +19,11 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
    * Assigns the page's template values.
    */
   public function run() {
-    $this->loadAvailableForLabels();
+    $this->availableForLabels = LetterheadAvailability::buildOptions('available_for');
+
     $this->assign('letterheads', $this->getLetterheads());
 
     parent::run();
-  }
-
-  /**
-   * Loads the "Available For" labels, indexed by values.
-   */
-  private function loadAvailableForLabels() {
-    $this->availableForLabels = [];
-    $availableFor = civicrm_api3('OptionValue', 'get', [
-      'sequential' => 0,
-      'option_group_id' => 'manageletterheads_available_for',
-      'options' => [
-        'limit' => 0,
-      ],
-    ]);
-
-    foreach ($availableFor['values'] as $availableFor) {
-      $this->availableForLabels[$availableFor['value']] = $availableFor['label'];
-    };
   }
 
   /**
