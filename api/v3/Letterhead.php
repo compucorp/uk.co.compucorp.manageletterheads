@@ -27,7 +27,7 @@ function _civicrm_api3_letterhead_create_spec(&$spec) {
 function civicrm_api3_letterhead_create($params) {
   $extraFields = ['available_for'];
   foreach ($extraFields as $field) {
-    if (isset($params['field'])) {
+    if (isset($params[$field])) {
       $params[$field] = _civicrm_api3_letterhead_getParameterValue($params, $field);
     }
   }
