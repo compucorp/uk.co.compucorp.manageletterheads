@@ -20,10 +20,28 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
    */
   public function run() {
     $this->availableForLabels = LetterheadAvailability::buildOptions('available_for');
+    $pager = $this->getPager();
+    list($offset, $limit) = $pager->getOffsetAndRowCount();
 
-    $this->assign('letterheads', $this->getLetterheads());
+    $this->assign_by_ref('pager', $pager);
+    $this->assign('letterheads', $this->getLetterheads($offset, $limit));
 
     parent::run();
+  }
+
+  /**
+   * Returns the pager object that can be used to paginate letterheads.
+   *
+   * @return CRM_Utils_Pager
+   */
+  private function getPager() {
+    $totalLetterheads = civicrm_api3('Letterhead', 'getcount', []);
+    $params['total'] = $totalLetterheads;
+    $params['currentPage'] = $this->get(CRM_Utils_Pager::PAGE_ID);
+    $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
+    $pager = new CRM_Utils_Pager($params);
+
+    return $pager;
   }
 
   /**
@@ -32,13 +50,18 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
    * The letterheads fields are formatted so they include values as rendered on
    * the template.
    *
+   * @param $offset
+   *   The offset record to start fetching letterheads from.
+   * @param $limit
+   *   The limit of letterheads to return.
    * @return array
    */
-  private function getLetterheads() {
+  private function getLetterheads($offset, $limit) {
     $letterheads = civicrm_api3('Letterhead', 'get', [
       'sequential' => 1,
       'options' => [
-        'limit' => 0,
+        'limit' => $limit,
+        'offset' => $offset,
         'sort' => 'weight ASC',
       ],
     ]);
