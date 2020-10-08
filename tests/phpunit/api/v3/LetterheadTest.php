@@ -11,11 +11,10 @@ class api_v3_LetterheadTest extends BaseHeadlessTest {
 
   /**
    * Test exception is thrown when available_for not present.
-   *
-   * @expectedException CiviCRM_API3_Exception
-   * @expectedExceptionMessage Mandatory key(s) missing from params array: available_for
    */
   public function testCreateThrowsAnExceptionWhenAvailableForFieldIsNotPresent() {
+    $this->expectException(CiviCRM_API3_Exception::class);
+    $this->expectExceptionMessage('Mandatory key(s) missing from params array: available_for');
     civicrm_api3('Letterhead', 'create', [
       'title' => 'Test title',
       'weight' => 1,
@@ -24,7 +23,7 @@ class api_v3_LetterheadTest extends BaseHeadlessTest {
   }
 
   /**
-   *
+   * Test delete also deletes associated data.
    */
   public function testDeleteAlsoDeletesAssociatedAvailableForFields() {
     $letterhead = LetterheadFabricator::fabricate(
@@ -64,12 +63,11 @@ class api_v3_LetterheadTest extends BaseHeadlessTest {
    * @param  string $sqlOperator
    *   Sql operator.
    *
-   * @expectedException CiviCRM_API3_Exception
-   * @expectedExceptionMessage No SQL operators allowed for available_for
-   *
    * @dataProvider invalidAvailableForLetterheadOptionOperators
    */
   public function testExceptionIsThrownWhenPassingAnInvalidOperatorForAvailableFor($sqlOperator) {
+    $this->expectException(CiviCRM_API3_Exception::class);
+    $this->expectExceptionMessage('No SQL operators allowed for available_for');
     civicrm_api3('Letterhead', 'create', [
       'title' => 'Test title',
       'available_for' => [$sqlOperator => [1]],
