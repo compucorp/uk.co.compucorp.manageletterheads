@@ -35,7 +35,7 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
    * @return CRM_Utils_Pager
    */
   private function getPager() {
-    $totalLetterheads = civicrm_api3('Letterhead', 'getcount', []);
+    $totalLetterheads = civicrm_api3('Letterhead', 'getcount');
     $params['total'] = $totalLetterheads;
     $params['currentPage'] = $this->get(CRM_Utils_Pager::PAGE_ID);
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
