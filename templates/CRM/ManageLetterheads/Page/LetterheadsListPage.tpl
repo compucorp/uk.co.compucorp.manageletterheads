@@ -13,7 +13,7 @@
         </div>
         {if !count($letterheads)}
           <div class="crm-case-custom-form-block-empty text-center clearfix">
-            No Letterheads are available.
+            {ts}No Letterheads are available.{/ts}
           <div>
         {/if}
       </div>
@@ -21,12 +21,12 @@
         <table class="table table-responsive table-striped">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Available for</th>
-              <th>Order</th>
-              <th>Enabled</th>
-              <th>Actions</th>
+              <th>{ts}Title{/ts}</th>
+              <th>{ts}Description{/ts}</th>
+              <th>{ts}Available for{/ts}</th>
+              <th>{ts}Order{/ts}</th>
+              <th>{ts}Enabled{/ts}</th>
+              <th>{ts}Actions{/ts}</th>
             </tr>
           </thead>
           <tbody>
