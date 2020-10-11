@@ -5,7 +5,13 @@ use CRM_ManageLetterheads_BAO_LetterheadAvailability as LetterheadAvailability;
 /**
  * Create Letterhead Form class.
  */
-class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
+class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
+
+  /**
+   * @var string
+   *   The ID for the letterhead. Used when updating.
+   */
+  private $_letterheadId;
 
   /**
    * Adds the form fields and buttons.
@@ -19,14 +25,71 @@ class CRM_ManageLetterheads_Form_AddLetterheadForm extends CRM_Core_Form {
   }
 
   /**
-   * Handles the letterhead creation process.
+   * Stores the letterhead ID internally, if provided.
+   */
+  public function preProcess() {
+    $this->_letterheadId = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+  }
+
+  /**
+   * Populates the letterhead fields when using the update form.
+   *
+   * {@inheritDoc}
+   */
+  public function setDefaultValues() {
+    $hasDefaultValues = !empty($this->defaultValues);
+    $isUpdateAction = $this->_action & CRM_Core_Action::UPDATE;
+
+    if ($hasDefaultValues || !$isUpdateAction) {
+      return;
+    }
+
+    $letterhead = civicrm_api3('Letterhead', 'getsingle', [
+      'id' => $this->_letterheadId,
+    ]);
+
+    $letterhead['available_for'] = $this->getAvailableForValuesAsKeys(
+      $letterhead['available_for']
+    );
+
+    $this->defaultValues = $letterhead;
+
+    return $this->defaultValues;
+  }
+
+  /**
+   * Handles the letterhead creation and update process.
    */
   public function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
+    $isUpdateAction = $this->_action & CRM_Core_Action::UPDATE;
+
+    if ($isUpdateAction) {
+      $formValues['id'] = $this->_letterheadId;
+    }
 
     $this->createLetterhead($formValues);
     $this->addSuccessMessage();
     $this->redirectToLetterheadsListPage();
+  }
+
+  /**
+   * Flips an array of Available For values as keys of the array.
+   *
+   * This is done because they are stored as [a, b, c], where a, b, and are
+   * the Available For option values, but the form understands it as
+   * [a => 1, b => 0, c => 1] where 1 or 0 means checked/uncheked.
+   *
+   * @param array $availableFor
+   *   An array Available For option values.
+   * @return array
+   */
+  private function getAvailableForValuesAsKeys(array $availableFor) {
+    $availableFor = array_flip($availableFor);
+
+    return array_map(function () {
+      return '1';
+    }, $availableFor);
   }
 
   /**

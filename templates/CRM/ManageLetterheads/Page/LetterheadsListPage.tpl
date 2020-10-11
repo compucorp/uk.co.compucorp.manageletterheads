@@ -5,7 +5,7 @@
         <div class="text-right">
           <a
             class="crm-popup btn btn-large btn-primary"
-            href="{crmURL p='civicrm/letterheads/add'}"
+            href="{crmURL p='civicrm/letterheads/form' q='reset=1&action=add'}"
           >
             <i class="fa fa-plus-circle"></i>
             {ts}Create new letterhead{/ts}
