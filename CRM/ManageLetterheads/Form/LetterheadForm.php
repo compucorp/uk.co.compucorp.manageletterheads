@@ -158,6 +158,10 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
         'name' => ts('Save'),
         'isDefault' => TRUE,
       ],
+      [
+        'type' => 'cancel',
+        'name' => ts('Cancel'),
+      ],
     ]);
   }
 
