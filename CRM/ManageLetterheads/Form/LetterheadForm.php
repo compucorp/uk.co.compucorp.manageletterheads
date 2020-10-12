@@ -1,5 +1,6 @@
 <?php
 
+use CRM_ManageLetterheads_ExtensionUtil as E;
 use CRM_ManageLetterheads_BAO_LetterheadAvailability as LetterheadAvailability;
 
 /**
@@ -119,8 +120,8 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
    */
   private function addSuccessMessage() {
     CRM_Core_Session::setStatus(
-      ts('Letterhead has been saved.'),
-      ts('Saved'),
+      E::ts('Letterhead has been saved.'),
+      E::ts('Saved'),
       'success'
     );
   }
@@ -138,29 +139,29 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
    * Adds the form elements including fields and buttons.
    */
   private function addFormElements() {
-    $this->add('text', 'title', ts('Title'), NULL, TRUE);
-    $this->add('textarea', 'description', ts('Description'));
-    $this->add('wysiwyg', 'content', ts('Content'), NULL, TRUE);
+    $this->add('text', 'title', E::ts('Title'), NULL, TRUE);
+    $this->add('textarea', 'description', E::ts('Description'));
+    $this->add('wysiwyg', 'content', E::ts('Content'), NULL, TRUE);
     $this->addCheckbox(
       'available_for',
-      ts('Available For'),
+      E::ts('Available For'),
       array_flip(LetterheadAvailability::buildOptions('available_for')),
       NULL,
       NULL,
       TRUE
     );
-    $this->add('number', 'weight', ts('Order'), [], TRUE);
-    $this->addElement('advcheckbox', 'is_active', ts('Enabled'));
+    $this->add('number', 'weight', E::ts('Order'), [], TRUE);
+    $this->addElement('advcheckbox', 'is_active', E::ts('Enabled'));
 
     $this->addButtons([
       [
         'type' => 'submit',
-        'name' => ts('Save'),
+        'name' => E::ts('Save'),
         'isDefault' => TRUE,
       ],
       [
         'type' => 'cancel',
-        'name' => ts('Cancel'),
+        'name' => E::ts('Cancel'),
       ],
     ]);
   }
