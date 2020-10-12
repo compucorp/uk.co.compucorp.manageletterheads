@@ -17,8 +17,14 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
    * Adds the form fields and buttons.
    */
   public function buildQuickForm() {
+    $isAddAction = $this->_action & CRM_Core_Action::ADD;
+
+    if ($isAddAction) {
+      $this->setDefaults(['is_active' => '1']);
+      $this->setDefaultWeight();
+    }
+
     $this->addFormElements();
-    $this->setDefaultWeight();
     $this->assign('elementNames', $this->getRenderableElementNames());
     $this->preventAjaxSubmit();
     parent::buildQuickForm();
@@ -34,14 +40,14 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
   /**
    * Populates the letterhead fields when using the update form.
    *
-   * {@inheritDoc}
+   * @return array
    */
   public function setDefaultValues() {
     $hasDefaultValues = !empty($this->defaultValues);
     $isUpdateAction = $this->_action & CRM_Core_Action::UPDATE;
 
     if ($hasDefaultValues || !$isUpdateAction) {
-      return;
+      return NULL;
     }
 
     $letterhead = civicrm_api3('Letterhead', 'getsingle', [
@@ -102,7 +108,7 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
       'content' => $formValues['content'],
       'available_for' => array_keys($formValues['available_for']),
       'weight' => $formValues['weight'],
-      'is_active' => isset($formValues['is_active']) ? '1' : '0',
+      'is_active' => $formValues['is_active'],
     ];
 
     civicrm_api3('Letterhead', 'create', $letterhead);
@@ -143,14 +149,8 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
       NULL,
       TRUE
     );
-    $this->add('text', 'weight', ts('Order'));
-    $this->addCheckbox(
-      'is_active',
-      ts('Enabled'),
-      ['' => 1],
-      NULL,
-      ['checked' => 'checked']
-    );
+    $this->add('number', 'weight', ts('Order'), [], TRUE);
+    $this->addElement('advcheckbox', 'is_active', ts('Enabled'));
 
     $this->addButtons([
       [
