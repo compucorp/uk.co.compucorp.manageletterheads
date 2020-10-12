@@ -68,14 +68,15 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
    * Handles the letterhead creation and update process.
    */
   public function postProcess() {
-    $formValues = $this->controller->exportValues($this->_name);
     $isUpdateAction = $this->_action & CRM_Core_Action::UPDATE;
+    $letterhead = $this->controller->exportValues($this->_name);
+    $letterhead['available_for'] = array_keys($letterhead['available_for']);
 
     if ($isUpdateAction) {
-      $formValues['id'] = $this->_letterheadId;
+      $letterhead['id'] = $this->_letterheadId;
     }
 
-    $this->createLetterhead($formValues);
+    civicrm_api3('Letterhead', 'create', $letterhead);
     $this->addSuccessMessage();
     $this->redirectToLetterheadsListPage();
   }
@@ -97,22 +98,6 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
     return array_map(function () {
       return '1';
     }, $availableFor);
-  }
-
-  /**
-   * Creates the letterhead using the given form values.
-   */
-  private function createLetterhead($formValues) {
-    $letterhead = [
-      'title' => $formValues['title'],
-      'description' => $formValues['description'],
-      'content' => $formValues['content'],
-      'available_for' => array_keys($formValues['available_for']),
-      'weight' => $formValues['weight'],
-      'is_active' => $formValues['is_active'],
-    ];
-
-    civicrm_api3('Letterhead', 'create', $letterhead);
   }
 
   /**
