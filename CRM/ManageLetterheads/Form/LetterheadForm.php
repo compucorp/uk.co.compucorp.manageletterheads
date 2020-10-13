@@ -93,11 +93,7 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
    * @return array
    */
   private function getAvailableForValuesAsKeys(array $availableFor) {
-    $availableFor = array_flip($availableFor);
-
-    return array_map(function () {
-      return '1';
-    }, $availableFor);
+    return array_fill_keys($availableFor, 1);
   }
 
   /**
