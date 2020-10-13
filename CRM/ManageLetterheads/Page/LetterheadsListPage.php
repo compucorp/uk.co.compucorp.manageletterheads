@@ -11,6 +11,12 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
 
   /**
    * @var array
+   *   List of all available actions for a letterhead.
+   */
+  private $actions;
+
+  /**
+   * @var array
    *   List of "Available For" labels, indexed by value.
    */
   private $availableForLabels;
@@ -25,6 +31,9 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
 
     $this->assign_by_ref('pager', $pager);
     $this->assign('letterheads', $this->getLetterheads($offset, $limit));
+
+    CRM_Core_Resources::singleton()
+      ->addScriptFile('uk.co.compucorp.manageletterheads', 'js/row-actions.js');
 
     parent::run();
   }
@@ -95,6 +104,7 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       'available_for' => implode($availableForLabels, ', '),
       'weight' => $letterhead['weight'],
       'is_active' => $letterhead['is_active'] === '1' ? ts('Yes') : ts('No'),
+      'actions' => $this->getLetterheadActions($letterhead),
     ];
   }
 
@@ -113,6 +123,57 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       },
       $optionValues
     );
+  }
+
+  /**
+   * Returns the list of actions for the given letterhead.
+   *
+   * @param array $letterhead
+   *   The data belonging to a letterhead.
+   * @return string
+   *   The list of actions as an HTML string.
+   */
+  private function getLetterheadActions(array $letterhead) {
+    $allActions = $this->getAllAvailableActions();
+    $letterheadActions = array_sum(array_keys($allActions));
+
+    if ($letterhead['is_active'] === '0') {
+      $letterheadActions -= CRM_Core_Action::DISABLE;
+    }
+    else {
+      $letterheadActions -= CRM_Core_Action::ENABLE;
+    }
+
+    return CRM_Core_Action::formLink($allActions, $letterheadActions, NULL);
+  }
+
+  /**
+   * Returns the full list of actions that are available for a letterhead.
+   *
+   * @return array
+   */
+  private function getAllAvailableActions() {
+    if (!$this->actions) {
+      $this->actions = [
+        CRM_Core_Action::ENABLE => [
+          'class' => 'letterhead-enable',
+          'name' => ts('Enable'),
+          'title' => ts('Enable'),
+        ],
+        CRM_Core_Action::DISABLE => [
+          'class' => 'letterhead-disable',
+          'name' => ts('Disable'),
+          'title' => ts('Disable'),
+        ],
+        CRM_Core_Action::DELETE => [
+          'class' => 'letterhead-delete',
+          'name' => ts('Delete'),
+          'title' => ts('Delete'),
+        ],
+      ];
+    }
+
+    return $this->actions;
   }
 
 }

@@ -32,13 +32,13 @@
             </thead>
             <tbody>
               {foreach from=$letterheads item=letterhead}
-                <tr>
+                <tr data-letterhead-id="{$letterhead.id}">
                   <td>{$letterhead.title}</td>
                   <td>{$letterhead.description}</td>
                   <td>{$letterhead.available_for}</td>
                   <td>{$letterhead.weight}</td>
                   <td>{$letterhead.is_active}</td>
-                  <td></td>
+                  <td>{$letterhead.actions}</td>
                 </tr>
               {/foreach}
             </tbody>
