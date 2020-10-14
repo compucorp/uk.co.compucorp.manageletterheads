@@ -1,5 +1,6 @@
 <?php
 
+use CRM_ManageLetterheads_ExtensionUtil as E;
 use CRM_ManageLetterheads_BAO_LetterheadAvailability as LetterheadAvailability;
 
 /**
@@ -112,8 +113,8 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
     $letterhead['available_for_text'] = implode($availableForLabels, ', ');
     $letterhead['actions'] = $this->getLetterheadActions($letterhead);
     $letterhead['is_active_text'] = $letterhead['is_active'] === '1'
-      ? ts('Yes')
-      : ts('No');
+      ? E::ts('Yes')
+      : E::ts('No');
 
     return $letterhead;
   }
@@ -171,18 +172,18 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       $this->actions = [
         CRM_Core_Action::ENABLE => [
           'class' => 'letterhead-enable crm-enable-disable',
-          'name' => ts('Enable'),
-          'title' => ts('Enable'),
+          'name' => E::ts('Enable'),
+          'title' => E::ts('Enable'),
         ],
         CRM_Core_Action::DISABLE => [
           'class' => 'letterhead-disable crm-enable-disable',
-          'name' => ts('Disable'),
-          'title' => ts('Disable'),
+          'name' => E::ts('Disable'),
+          'title' => E::ts('Disable'),
         ],
         CRM_Core_Action::DELETE => [
           'class' => 'letterhead-delete',
-          'name' => ts('Delete'),
-          'title' => ts('Delete'),
+          'name' => E::ts('Delete'),
+          'title' => E::ts('Delete'),
         ],
       ];
     }
