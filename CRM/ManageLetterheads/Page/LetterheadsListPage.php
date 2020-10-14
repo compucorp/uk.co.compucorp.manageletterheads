@@ -39,6 +39,18 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
   }
 
   /**
+   * Returns the Letterhead BAO class name.
+   *
+   * This is used by the enable/disable CiviCRM API to handle these actions
+   * automatically
+   *
+   * @return string
+   */
+  public function getBAOName() {
+    return 'CRM_ManageLetterheads_BAO_Letterhead';
+  }
+
+  /**
    * Returns the pager object that can be used to paginate letterheads.
    *
    * @return CRM_Utils_Pager
@@ -97,15 +109,13 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       $letterhead['available_for']
     );
 
-    return [
-      'id' => $letterhead['id'],
-      'title' => $letterhead['title'],
-      'description' => $letterhead['description'],
-      'available_for' => implode($availableForLabels, ', '),
-      'weight' => $letterhead['weight'],
-      'is_active' => $letterhead['is_active'] === '1' ? ts('Yes') : ts('No'),
-      'actions' => $this->getLetterheadActions($letterhead),
-    ];
+    $letterhead['available_for_text'] = implode($availableForLabels, ', ');
+    $letterhead['actions'] = $this->getLetterheadActions($letterhead);
+    $letterhead['is_active_text'] = $letterhead['is_active'] === '1'
+      ? ts('Yes')
+      : ts('No');
+
+    return $letterhead;
   }
 
   /**
@@ -144,7 +154,11 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       $letterheadActions -= CRM_Core_Action::ENABLE;
     }
 
-    return CRM_Core_Action::formLink($allActions, $letterheadActions, NULL);
+    return CRM_Core_Action::formLink(
+      $allActions,
+      $letterheadActions,
+      ['id' => $letterhead['id']]
+    );
   }
 
   /**
@@ -156,12 +170,12 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
     if (!$this->actions) {
       $this->actions = [
         CRM_Core_Action::ENABLE => [
-          'class' => 'letterhead-enable',
+          'class' => 'letterhead-enable crm-enable-disable',
           'name' => ts('Enable'),
           'title' => ts('Enable'),
         ],
         CRM_Core_Action::DISABLE => [
-          'class' => 'letterhead-disable',
+          'class' => 'letterhead-disable crm-enable-disable',
           'name' => ts('Disable'),
           'title' => ts('Disable'),
         ],

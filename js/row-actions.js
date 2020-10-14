@@ -2,9 +2,7 @@
   $(document).ready(function () {
     var apiActions = getApiActionFunctions();
 
-    $('.action-item.letterhead-enable').click(apiActions.enableLetterhead);
     $('.action-item.letterhead-delete').click(apiActions.deleteLetterhead);
-    $('.action-item.letterhead-disable').click(apiActions.disableLetterhead);
   });
 
   /**
@@ -41,28 +39,12 @@
    */
   function getApiActionFunctions () {
     return {
-      enableLetterhead: getApiActionFactory(
-        'create',
-        { is_active: '1' },
-        {
-          start: ts('Enabling...'),
-          success: ts('Enabled'),
-        }
-      ),
       deleteLetterhead: getApiActionFactory(
         'delete',
         {},
         {
           start: ts('Deleting...'),
           success: ts('Deleted'),
-        }
-      ),
-      disableLetterhead: getApiActionFactory(
-        'create',
-        { is_active: '0' },
-        {
-          start: ts('Disabling...'),
-          success: ts('Disabled'),
         }
       )
     };
