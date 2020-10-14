@@ -170,6 +170,13 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
   private function getAllAvailableActions() {
     if (!$this->actions) {
       $this->actions = [
+        CRM_Core_Action::UPDATE => [
+          'class' => 'letterhead-edit crm-popup',
+          'name' => E::ts('Edit'),
+          'title' => E::ts('Edit'),
+          'url' => 'civicrm/letterheads/form',
+          'qs' => 'action=update&id=%%id%%&reset=1',
+        ],
         CRM_Core_Action::ENABLE => [
           'class' => 'letterhead-enable crm-enable-disable',
           'name' => E::ts('Enable'),
