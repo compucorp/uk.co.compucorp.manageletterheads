@@ -39,6 +39,12 @@ jobs:
         working-directory: ${{ env.CIVICRM_EXTENSIONS_DIR }}
         run: cv en manageletterheads
 
+      - name: Run JS unit tests
+        working-directory: ${{ env.CIVICRM_EXTENSIONS_DIR }}/uk.co.compucorp.manageletterheads
+        run: |
+          npm install
+          npm test
+
       - name: Run phpunit tests
         if: ${{ always() }}
         working-directory: ${{ env.CIVICRM_EXTENSIONS_DIR }}/uk.co.compucorp.manageletterheads

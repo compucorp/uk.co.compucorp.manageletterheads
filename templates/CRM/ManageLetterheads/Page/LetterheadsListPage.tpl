@@ -19,6 +19,8 @@
           {/if}
         </div>
         {if count($letterheads)}
+          {* handle enable/disable actions*}
+          {include file="CRM/common/enableDisableApi.tpl"}
           <table class="table table-responsive table-striped">
             <thead>
               <tr>
@@ -32,13 +34,13 @@
             </thead>
             <tbody>
               {foreach from=$letterheads item=letterhead}
-                <tr>
+                <tr id="Letterhead-{$letterhead.id}" class="crm-entity {if NOT $letterhead.is_active} disabled{/if}">
                   <td>{$letterhead.title}</td>
                   <td>{$letterhead.description}</td>
-                  <td>{$letterhead.available_for}</td>
+                  <td>{$letterhead.available_for_text}</td>
                   <td>{$letterhead.weight}</td>
-                  <td>{$letterhead.is_active}</td>
-                  <td></td>
+                  <td>{$letterhead.is_active_text}</td>
+                  <td>{$letterhead.actions|replace:'xx':$letterhead.id}</td>
                 </tr>
               {/foreach}
             </tbody>

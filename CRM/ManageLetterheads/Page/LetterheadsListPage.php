@@ -1,5 +1,6 @@
 <?php
 
+use CRM_ManageLetterheads_ExtensionUtil as E;
 use CRM_ManageLetterheads_BAO_LetterheadAvailability as LetterheadAvailability;
 
 /**
@@ -8,6 +9,12 @@ use CRM_ManageLetterheads_BAO_LetterheadAvailability as LetterheadAvailability;
  * A page that displays the full list of letterheads.
  */
 class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
+
+  /**
+   * @var array
+   *   List of all available actions for a letterhead.
+   */
+  private $actions;
 
   /**
    * @var array
@@ -26,7 +33,22 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
     $this->assign_by_ref('pager', $pager);
     $this->assign('letterheads', $this->getLetterheads($offset, $limit));
 
+    CRM_Core_Resources::singleton()
+      ->addScriptFile('uk.co.compucorp.manageletterheads', 'js/row-actions.js');
+
     parent::run();
+  }
+
+  /**
+   * Returns the Letterhead BAO class name.
+   *
+   * This is used by the enable/disable CiviCRM API to handle these actions
+   * automatically
+   *
+   * @return string
+   */
+  public function getBAOName() {
+    return 'CRM_ManageLetterheads_BAO_Letterhead';
   }
 
   /**
@@ -88,14 +110,13 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       $letterhead['available_for']
     );
 
-    return [
-      'id' => $letterhead['id'],
-      'title' => $letterhead['title'],
-      'description' => $letterhead['description'],
-      'available_for' => implode($availableForLabels, ', '),
-      'weight' => $letterhead['weight'],
-      'is_active' => $letterhead['is_active'] === '1' ? ts('Yes') : ts('No'),
-    ];
+    $letterhead['available_for_text'] = implode($availableForLabels, ', ');
+    $letterhead['actions'] = $this->getLetterheadActions($letterhead);
+    $letterhead['is_active_text'] = $letterhead['is_active'] === '1'
+      ? E::ts('Yes')
+      : E::ts('No');
+
+    return $letterhead;
   }
 
   /**
@@ -113,6 +134,61 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       },
       $optionValues
     );
+  }
+
+  /**
+   * Returns the list of actions for the given letterhead.
+   *
+   * @param array $letterhead
+   *   The data belonging to a letterhead.
+   * @return string
+   *   The list of actions as an HTML string.
+   */
+  private function getLetterheadActions(array $letterhead) {
+    $allActions = $this->getAllAvailableActions();
+    $letterheadActions = array_sum(array_keys($allActions));
+
+    if ($letterhead['is_active'] === '0') {
+      $letterheadActions -= CRM_Core_Action::DISABLE;
+    }
+    else {
+      $letterheadActions -= CRM_Core_Action::ENABLE;
+    }
+
+    return CRM_Core_Action::formLink(
+      $allActions,
+      $letterheadActions,
+      ['id' => $letterhead['id']]
+    );
+  }
+
+  /**
+   * Returns the full list of actions that are available for a letterhead.
+   *
+   * @return array
+   */
+  private function getAllAvailableActions() {
+    if (!$this->actions) {
+      $this->actions = [
+        CRM_Core_Action::ENABLE => [
+          'class' => 'letterhead-enable crm-enable-disable',
+          'name' => E::ts('Enable'),
+          'title' => E::ts('Enable'),
+        ],
+        CRM_Core_Action::DISABLE => [
+          'class' => 'letterhead-disable crm-enable-disable',
+          'name' => E::ts('Disable'),
+          'title' => E::ts('Disable'),
+        ],
+        CRM_Core_Action::DELETE => [
+          'class' => 'letterhead-delete',
+          'name' => E::ts('Delete'),
+          'title' => E::ts('Delete'),
+        ],
+      ];
+    }
+
+    return $this->actions;
   }
 
 }
