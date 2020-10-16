@@ -49,12 +49,7 @@
          * be used. This is the expected behaviour according to the specs.
          */
         it('displays a deleting letterhead message', () => {
-          expect(crmApi).toHaveBeenCalledWith(
-            jasmine.any(String),
-            jasmine.any(String),
-            jasmine.any(Object),
-            jasmine.any(Object)
-          );
+          expect(crmApi.calls.mostRecent().args[3].start).not.toBeDefined();
         });
 
         it('deletes the letterhead', () => {
