@@ -1,5 +1,7 @@
 <?php
 
+use CRM_ManageLetterheads_Setup_CreateNavigationItem as CreateNavigationItem;
+
 /**
  * Collection of upgrade steps.
  */
@@ -16,6 +18,14 @@ class CRM_ManageLetterheads_Upgrader extends CRM_ManageLetterheads_Upgrader_Base
    * Custom extension installation logic
    */
   public function install() {
+    $steps = [
+      new CreateNavigationItem(),
+    ];
+
+    foreach ($steps as $step) {
+      $step->apply();
+    }
+
     $this->processXMLInstallationFiles();
   }
 
