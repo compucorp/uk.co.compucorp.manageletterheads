@@ -9,7 +9,7 @@
    * @param {string} letterheadId The letterhead ID.
    * @return {Promise} resolved after deleting the letterhead successfully
    */
-  function deleteDeletterhead (letterheadId) {
+  function deleteLetterhead (letterheadId) {
     return CRM.api3(
       'Letterhead',
       'delete',
@@ -31,7 +31,7 @@
     event.preventDefault();
     displayDeleteLetterheadConfirmationDialog()
       .on('crmConfirm:yes', function () {
-        deleteDeletterhead(letterheadId)
+        deleteLetterhead(letterheadId)
           .done(function () {
             crmRefreshParent($entityRow);
           });
