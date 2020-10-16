@@ -1,69 +1,57 @@
-(function ($, crmApi, crmStatus, ts, locationService) {
+(function ($, crmApi, crmConfirm, crmRefreshParent, ts) {
   $(document).ready(function () {
-    var apiActions = getApiActionFunctions();
-
-    $('.action-item.letterhead-delete').click(apiActions.deleteLetterhead);
+    $('.action-item.letterhead-delete').click(handleLetterheadDeleteAction);
   });
 
   /**
-   * Generates a function that can be used to update the letterhead when clicking
-   * on an action.
+   * Deletes the letterhead for the given ID.
    *
-   * When triggered, the function will call the given API action,
-   * send the default letterhead data plus the letterhead ID and will display a
-   * status message while the request is in progress. Once the request is done,
-   * it will reload the page.
-   *
-   * @param {string} apiAction The Letterhead API action's name.
-   * @param {object} actionData The default data to send to the API.
-   * @param {object} messages Status messages.
-   *
-   * @returns {Function}
+   * @param {string} letterheadId The letterhead ID.
+   * @return {Promise} resolved after deleting the letterhead successfully
    */
-  function getApiActionFactory(apiAction, actionData, messages) {
-    return function executeApiAction () {
-      var letterheadId = getLetterheadId(this);
-      var promise = crmApi('Letterhead', apiAction, $.extend({}, actionData, {
-        id: letterheadId
-      }));
-
-      crmStatus(messages, promise)
-        .then(refreshListOfLetterheads);
-    };
+  function deleteLetterhead (letterheadId) {
+    return CRM.api3(
+      'Letterhead',
+      'delete',
+      { id: letterheadId },
+      { success: ts('Letterhead deleted') }
+    );
   }
 
   /**
-   * Returns the list of actions for enabling, disabling, and deleting letterheads.
+   * Confirms the letterhead delete. Sends the data to the API and refreshes the
+   * list of letterheads after done.
    *
-   * @returns {object}
+   * @param {object} event Click event object.
    */
-  function getApiActionFunctions () {
-    return {
-      deleteLetterhead: getApiActionFactory(
-        'delete',
-        {},
-        {
-          start: ts('Deleting...'),
-          success: ts('Deleted'),
-        }
-      )
-    };
+  function handleLetterheadDeleteAction (event) {
+    var $entityRow = $(this).closest('.crm-entity');
+    var letterheadId = $entityRow.attr('id').split('-')[1];
+
+    event.preventDefault();
+    displayDeleteLetterheadConfirmationDialog()
+      .on('crmConfirm:yes', function () {
+        deleteLetterhead(letterheadId)
+          .done(function () {
+            crmRefreshParent($entityRow);
+          });
+      });
   }
 
   /**
-   * Returns the letterhead ID as stored in the action's row element data attribute.
+   * Displays a delete letterhead confirmation dialog.
    *
-   * @param {Element} actionsElementReference The action's link element reference.
-   * @returns {string}
+   * @returns {Element} A dialog element that can be used to listen to
+   *   the confirm event.
    */
-  function getLetterheadId (actionsElementReference) {
-    return $(actionsElementReference).parents('tr').data('letterhead-id');
+  function displayDeleteLetterheadConfirmationDialog () {
+    return crmConfirm({
+      title: ts('Warning'),
+      message: ts('Are you sure you would like to delete this letterhead?'),
+      options: {
+        yes: ts('Yes'),
+        no: ts('Cancel')
+      }
+    });
   }
-
-  /**
-   * Refreshes the current page.
-   */
-  function refreshListOfLetterheads () {
-    locationService.reload();
-  }
-})(CRM.$, CRM.api3, CRM.status, ts, window.locationService || window.location);
+})(CRM.$, CRM.api3, CRM.confirm, CRM.refreshParent, CRM.ts('uk.co.compucorp.manageletterheads'));

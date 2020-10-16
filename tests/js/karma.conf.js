@@ -14,6 +14,7 @@ module.exports = function (config) {
       'bower_components/lodash-compat/lodash.min.js',
       'bower_components/select2/select2.min.js',
       'bower_components/jquery-validation/dist/jquery.validate.min.js',
+      'bower_components/datatables/media/js/jquery.dataTables.min.js',
       'packages/jquery/plugins/jquery.blockUI.js',
       'js/Common.js',
 

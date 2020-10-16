@@ -1,12 +1,12 @@
-(($, _, crmApi, crmStatus, locationService) => {
+(($, _, crmApi, crmConfirm, crmRefreshParent, ts) => {
   describe('Row Actions', () => {
-    let fixture, letterheadId, originalWindow;
+    let fixture, letterheadId;
 
     beforeEach(() => {
-      letterheadId = parseInt(_.uniqueId(), 10);
+      letterheadId = _.uniqueId();
       fixture = `
         <table>
-          <tr data-letterhead-id="${letterheadId}">
+          <tr id="Letterhead-${letterheadId}" class="crm-entity">
             <td>
               <a class="action-item letterhead-delete">Delete</a>
             </td>
@@ -14,18 +14,11 @@
         </table>
       `;
 
-      originalWindow = window;
-      window = {
-        location: jasmine.createSpyObj('location', ['reload'])
-      };
-
       $('body').append(fixture);
       $().triggerBlockedOnReadyListeners();
     });
 
     afterEach(() => {
-      window = originalWindow;
-
       $('body').empty();
     });
 
@@ -34,36 +27,54 @@
         $('.letterhead-delete').click();
       });
 
-      it('displays a deleting letterhead message', () => {
-        expect(crmStatus).toHaveBeenCalledWith(
-          jasmine.objectContaining({ start: ts('Deleting...') }),
-          jasmine.any(Object)
-        );
-      });
-
-      it('deletes the letterhead', () => {
-        expect(crmApi).toHaveBeenCalledWith('Letterhead', 'delete', {
-          id: letterheadId
+      it('displays a confirmation dialog', () => {
+        expect(crmConfirm).toHaveBeenCalledWith({
+          title: ts('Warning'),
+          message: ts('Are you sure you would like to delete this letterhead?'),
+          options: {
+            yes: ts('Yes'),
+            no: ts('Cancel')
+          }
         });
       });
 
-      describe('after deleting the letterhead', () => {
-        beforeEach((done) => {
-          crmStatus.resolve();
-          setTimeout(done);
+      describe('when the dialog is confirmed', () => {
+        beforeEach(() => {
+          crmConfirm.$dialog.trigger('crmConfirm:yes');
         });
 
-        it('displays a deleted letterhead message', () => {
-          expect(crmStatus).toHaveBeenCalledWith(
-            jasmine.objectContaining({ success: ts('Deleted') }),
+        /**
+         * @note The last parameter sent to *crmApi* is sent to the *crmStatus* service.
+         * If there is no `start` option for that parameter, a default "Saving" text will
+         * be used. This is the expected behaviour according to the specs.
+         */
+        it('displays a deleting letterhead message', () => {
+          expect(crmApi.calls.mostRecent().args[3].start).not.toBeDefined();
+        });
+
+        it('deletes the letterhead', () => {
+          expect(crmApi).toHaveBeenCalledWith(
+            'Letterhead',
+            'delete',
+            { id: letterheadId },
             jasmine.any(Object)
           );
         });
 
-        it('refreshes the page', () => {
-          expect(locationService.reload).toHaveBeenCalledWith();
+        it('displays a success message after deleting the letterhead', () => {
+          expect(crmApi).toHaveBeenCalledWith(
+            jasmine.any(String),
+            jasmine.any(String),
+            jasmine.any(Object),
+            { success: ts('Letterhead deleted') }
+          );
+        });
+
+        it('refreshes the letterhead entity table page', () => {
+          expect(crmRefreshParent).toHaveBeenCalled();
+          expect(crmRefreshParent.calls.mostRecent().args[0].is('.crm-entity'));
         });
       });
     });
   });
-})(CRM.$, CRM._, CRM.api3, CRM.status, window.locationService);
+})(CRM.$, CRM._, CRM.api3, CRM.confirm, CRM.refreshParent, CRM.ts('uk.co.compucorp.manageletterheads'));
