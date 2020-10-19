@@ -19,6 +19,7 @@ module.exports = function (config) {
       'js/Common.js',
 
       // Global variables that need to be accessible in the test environment
+      extPath + '/tests/js/globals/**/*.js',
       extPath + '/tests/js/helpers/**/*.js',
 
       // Source Files
