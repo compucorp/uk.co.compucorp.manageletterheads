@@ -1,6 +1,6 @@
 <?php
 
-use CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadSelect as AddLetterheadSelect;
+use CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown as AddLetterheadDropdown;
 
 require_once 'manageletterheads.civix.php';
 
@@ -156,7 +156,7 @@ function manageletterheads_civicrm_permission(&$permissions) {
  */
 function manageletterheads_civicrm_buildForm($formName, $form) {
   $hooks = [
-    new AddLetterheadSelect(),
+    new AddLetterheadDropdown(),
   ];
 
   foreach ($hooks as $hook) {

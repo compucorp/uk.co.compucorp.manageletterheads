@@ -1,5 +1,5 @@
 (($, _, letterheadOptions, ts, crmWysiwyg) => {
-  var $htmlMessageEditor, $letterheadSelect, $templateRow, $templateSelect,
+  var $htmlMessageEditor, $letterheadDropdown, $templateRow, $templateDropdown,
     isEmailForm;
 
   $(document).ready(function () {
@@ -9,33 +9,33 @@
       ? { labelTdClass: 'label' }
       : { labelClass: 'label-left' };
 
-    appendLetterheadSelectRow(options);
+    appendLetterheadDropdownRow(options);
     addEventListeners();
   });
 
   /**
-   * Adds the event listeners for the letterhead and template select change.
+   * Adds the event listeners for the letterhead and template dropdown change.
    */
   function addEventListeners () {
-    $letterheadSelect.on('change', handleLetterheadChange);
-    $templateSelect.on('change', handleTemplateChange);
+    $letterheadDropdown.on('change', handleLetterheadChange);
+    $templateDropdown.on('change', handleTemplateChange);
   }
 
   /**
    * Appends a letterhead dropdown element after the template selection field.
    *
-   * @param {LetterheadSelectRowOptions} options a list of options to use when
-   *   appending the letterhead select row to the form.
+   * @param {LetterheadDropdownRowOptions} options a list of options to use when
+   *   appending the letterhead dropdown row to the form.
    */
-  function appendLetterheadSelectRow(options) {
-    var $letterheadSelectRow = $('<tr><td><label>Select Letterhead</label></td><td></td></tr>');
-    $letterheadSelect = buildLetterheadSelect();
+  function appendLetterheadDropdownRow(options) {
+    var $letterheadDropdownRow = $('<tr><td><label>Select Letterhead</label></td><td></td></tr>');
+    $letterheadDropdown = buildLetterheadDropdown();
 
-    $letterheadSelectRow.find('td:first').addClass(options.labelTdClass);
-    $letterheadSelectRow.find('label').addClass(options.labelClass);
-    $letterheadSelect.appendTo($letterheadSelectRow.find('td:last'));
+    $letterheadDropdownRow.find('td:first').addClass(options.labelTdClass);
+    $letterheadDropdownRow.find('label').addClass(options.labelClass);
+    $letterheadDropdown.appendTo($letterheadDropdownRow.find('td:last'));
 
-    $templateRow.after($letterheadSelectRow);
+    $templateRow.after($letterheadDropdownRow);
   }
 
   /**
@@ -59,13 +59,13 @@
   }
 
   /**
-   * @return {object} a Select element with all the option values for the
+   * @return {object} a Dropdown element with all the option values for the
    * letterheads stored in the configuration.
    */
-  function buildLetterheadSelect () {
+  function buildLetterheadDropdown () {
     var noneOption = { id: '', title: ts('None') };
     var optionTemplate = _.template('<option value="<%= id %>"><%= title %></option>');
-    var selectHtml = '<select class="crm-form-select">' +
+    var dropdownHtml = '<select class="crm-form-select">' +
       _.chain(noneOption)
         .concat(letterheadOptions)
         .map(optionTemplate)
@@ -73,7 +73,7 @@
         .value()
       + '</select>';
 
-    return $(selectHtml);
+    return $(dropdownHtml);
   }
 
   /**
@@ -88,7 +88,7 @@
    * selecting "None".
    */
   function handleLetterheadChange () {
-    var letterheadId = $letterheadSelect.val();
+    var letterheadId = $letterheadDropdown.val();
 
     if (letterheadId) {
       appendLetterheadToMessage(letterheadId);
@@ -106,7 +106,7 @@
    * is not inmediately changed.
    */
   function handleTemplateChange () {
-    var letterheadId = $letterheadSelect.val();
+    var letterheadId = $letterheadDropdown.val();
 
     if (!letterheadId) {
       return;
@@ -132,7 +132,7 @@
     var $emailTemplateRow = $('.crm-contactEmail-form-block-template');
     var $pdfTemplateRow = $('select[name="template"]').parents('tr');
 
-    $templateSelect = $('[name="template"]');
+    $templateDropdown = $('[name="template"]');
     $htmlMessageEditor = $('[name="html_message"]');
     isEmailForm = $emailTemplateRow.length > 0;
     $templateRow = isEmailForm ? $emailTemplateRow : $pdfTemplateRow;
@@ -166,7 +166,7 @@
   }
 
   /**
-   * @typedef {object} LetterheadSelectRowOptions
+   * @typedef {object} LetterheadDropdownRowOptions
    *
    * @property {string} [labelClass] A class that will be applied directly to the label element.
    * @property {string} [labelTdClass] A class that will be applied to the label's parent TD element.

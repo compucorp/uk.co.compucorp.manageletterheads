@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Adds the letterhead select element to the Email and PDF Letter forms.
+ * Adds the letterhead dropdown element to the Email and PDF Letter forms.
  *
  * The list of letterheads that should be visible for each form is also appended
  * as a configuration variable.
  */
-class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadSelect {
+class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown {
 
   /**
    * @var bool
@@ -87,16 +87,16 @@ class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadSelect {
    * Adds the given list of letterheads to a configuration variable.
    *
    * This configuration variable can be accessed by the front-end to build
-   * the select for the letterheads.
+   * the dropdown for the letterheads.
    *
-   * The script to build this select is also appended.
+   * The script to build this dropdown is also appended.
    *
    * @param array $letterheads
    *   A list of letterheads to add to the CiviCRM configuration.
    */
   private function addListOfLetterheadOptionsToConfig($letterheads) {
     CRM_Core_Resources::singleton()
-      ->addScriptFile('uk.co.compucorp.manageletterheads', 'js/letterheads-select.js')
+      ->addScriptFile('uk.co.compucorp.manageletterheads', 'js/letterheads-dropdown.js')
       ->addSetting([
         'manageletterheads' => [
           'letterhead_options' => $letterheads,

@@ -1,6 +1,6 @@
 (($, crmWysiwyg) => {
-  describe('Letterheads Select', () => {
-    let $letterheadSelect, $letterheadSelectRow, $templateSelectRow, $messageEditor;
+  describe('Letterheads Dropdown', () => {
+    let $letterheadDropdown, $letterheadDropdownRow, $templateDropdownRow, $messageEditor;
 
     afterEach(() => {
       $('body').empty();
@@ -11,22 +11,22 @@
         $('body').append(getEmailFormFixture());
         $().triggerBlockedOnReadyListeners();
 
-        $letterheadSelectRow = $(':contains("Select Letterhead")').parents('tr');
-        $templateSelectRow = $('.crm-contactEmail-form-block-template');
+        $letterheadDropdownRow = $(':contains("Select Letterhead")').parents('tr');
+        $templateDropdownRow = $('.crm-contactEmail-form-block-template');
       });
 
-      it('adds the letterhead select after the template field row', () => {
-        expect($letterheadSelectRow.prev().is($templateSelectRow)).toBe(true);
+      it('adds the letterhead dropdown after the template field row', () => {
+        expect($letterheadDropdownRow.prev().is($templateDropdownRow)).toBe(true);
       });
 
       it('adds a "None" option to the list of letterheads', () => {
-        expect($letterheadSelectRow.find('option[value=""]').text()).toBe('None');
+        expect($letterheadDropdownRow.find('option[value=""]').text()).toBe('None');
       });
 
-      it('adds the full list of letterheads to the select options', () => {
-        expect($letterheadSelectRow.find('option[value=1]').text()).toBe('Letterhead (English)');
-        expect($letterheadSelectRow.find('option[value=2]').text()).toBe('Letterhead (Welsh)');
-        expect($letterheadSelectRow.find('option[value=3]').text()).toBe('Letterhead (French)');
+      it('adds the full list of letterheads to the dropdown options', () => {
+        expect($letterheadDropdownRow.find('option[value=1]').text()).toBe('Letterhead (English)');
+        expect($letterheadDropdownRow.find('option[value=2]').text()).toBe('Letterhead (Welsh)');
+        expect($letterheadDropdownRow.find('option[value=3]').text()).toBe('Letterhead (French)');
       });
     });
 
@@ -35,22 +35,22 @@
         $('body').append(getPdfFormFixture());
         $().triggerBlockedOnReadyListeners();
 
-        $letterheadSelectRow = $(':contains("Select Letterhead")').parents('tr');
-        $templateSelectRow = $('select[name="template"]').parents('tr');
+        $letterheadDropdownRow = $(':contains("Select Letterhead")').parents('tr');
+        $templateDropdownRow = $('select[name="template"]').parents('tr');
       });
 
-      it('adds the letterhead select after the template field row', () => {
-        expect($letterheadSelectRow.prev().is($templateSelectRow)).toBe(true);
+      it('adds the letterhead dropdown after the template field row', () => {
+        expect($letterheadDropdownRow.prev().is($templateDropdownRow)).toBe(true);
       });
 
       it('adds a "None" option to the list of letterheads', () => {
-        expect($letterheadSelectRow.find('option[value=""]').text()).toBe('None');
+        expect($letterheadDropdownRow.find('option[value=""]').text()).toBe('None');
       });
 
-      it('adds the full list of letterheads to the select options', () => {
-        expect($letterheadSelectRow.find('option[value=1]').text()).toBe('Letterhead (English)');
-        expect($letterheadSelectRow.find('option[value=2]').text()).toBe('Letterhead (Welsh)');
-        expect($letterheadSelectRow.find('option[value=3]').text()).toBe('Letterhead (French)');
+      it('adds the full list of letterheads to the dropdown options', () => {
+        expect($letterheadDropdownRow.find('option[value=1]').text()).toBe('Letterhead (English)');
+        expect($letterheadDropdownRow.find('option[value=2]').text()).toBe('Letterhead (Welsh)');
+        expect($letterheadDropdownRow.find('option[value=3]').text()).toBe('Letterhead (French)');
       });
     });
 
@@ -59,7 +59,7 @@
         $('body').append(getEmailFormFixture());
         $().triggerBlockedOnReadyListeners();
 
-        $letterheadSelect = $(':contains("Select Letterhead")').parents('tr').find('select');
+        $letterheadDropdown = $(':contains("Select Letterhead")').parents('tr').find('select');
         $messageEditor = $('.crm-form-wysiwyg');
 
         crmWysiwyg._create($messageEditor);
@@ -67,8 +67,8 @@
           $messageEditor,
           'Example content'
         );
-        $letterheadSelect.val('2');
-        $letterheadSelect.trigger('change');
+        $letterheadDropdown.val('2');
+        $letterheadDropdown.trigger('change');
       });
 
       it('appends the letterhead to the message editor', () => {
@@ -87,7 +87,7 @@
         $('body').append(getEmailFormFixture());
         $().triggerBlockedOnReadyListeners();
 
-        $letterheadSelect = $(':contains("Select Letterhead")').parents('tr').find('select');
+        $letterheadDropdown = $(':contains("Select Letterhead")').parents('tr').find('select');
         $messageEditor = $('.crm-form-wysiwyg');
 
         crmWysiwyg._create($messageEditor);
@@ -95,10 +95,10 @@
           $messageEditor,
           'Example content'
         );
-        $letterheadSelect.val('2');
-        $letterheadSelect.trigger('change');
-        $letterheadSelect.val('');
-        $letterheadSelect.trigger('change');
+        $letterheadDropdown.val('2');
+        $letterheadDropdown.trigger('change');
+        $letterheadDropdown.val('');
+        $letterheadDropdown.trigger('change');
       });
 
       it('does not contain a letterhead element', () => {
@@ -119,18 +119,18 @@
 
         $().triggerBlockedOnReadyListeners();
 
-        const $templateSelect = $('[name="template"]');
-        $letterheadSelect = $(':contains("Select Letterhead")').parents('tr').find('select');
+        const $templateDropdown = $('[name="template"]');
+        $letterheadDropdown = $(':contains("Select Letterhead")').parents('tr').find('select');
         $messageEditor = $('.crm-form-wysiwyg');
 
         crmWysiwyg._create($messageEditor);
-        $letterheadSelect.val('2');
-        $letterheadSelect.trigger('change');
+        $letterheadDropdown.val('2');
+        $letterheadDropdown.trigger('change');
         crmWysiwyg.setVal(
           $messageEditor,
           'Template content'
         );
-        $templateSelect.trigger('change');
+        $templateDropdown.trigger('change');
         CKEDITOR.instances.html_message.fire('change');
         jasmine.clock().tick();
       });
