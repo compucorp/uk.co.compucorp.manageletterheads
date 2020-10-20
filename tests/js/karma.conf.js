@@ -19,7 +19,17 @@ module.exports = function (config) {
       'js/Common.js',
 
       // Global variables that need to be accessible in the test environment
+      extPath + '/tests/js/globals/**/*.js',
       extPath + '/tests/js/helpers/**/*.js',
+
+      // CKEditor files
+      'bower_components/ckeditor/ckeditor.js',
+      'bower_components/ckeditor/config.js',
+      'bower_components/ckeditor/lang/en.js',
+      'bower_components/ckeditor/styles.js',
+      'js/wysiwyg/crm.wysiwyg.js',
+      'js/wysiwyg/crm.ckeditor.js',
+      { pattern: 'bower_components/ckeditor/**/*.css' },
 
       // Source Files
       { pattern: extPath + '/js/**/*.js' },

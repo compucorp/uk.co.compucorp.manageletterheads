@@ -1,5 +1,7 @@
 <?php
 
+use CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown as AddLetterheadDropdown;
+
 require_once 'manageletterheads.civix.php';
 
 /**
@@ -147,4 +149,17 @@ function manageletterheads_civicrm_permission(&$permissions) {
     ts('CiviCRM: manage letterheads'),
     ts('Allows managing of a list of letterheads that can be selected by users when creating emails and PDF letters'),
   ];
+}
+
+/**
+ * Implements hook_civicrm_buildForm().
+ */
+function manageletterheads_civicrm_buildForm($formName, $form) {
+  $hooks = [
+    new AddLetterheadDropdown(),
+  ];
+
+  foreach ($hooks as $hook) {
+    $hook->run($formName, $form);
+  }
 }
