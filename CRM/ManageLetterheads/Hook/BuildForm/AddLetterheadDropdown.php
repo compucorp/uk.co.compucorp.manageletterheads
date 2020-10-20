@@ -35,52 +35,35 @@ class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown {
     }
 
     $availableForName = $this->isEmailForm ? 'emails' : 'pdf_letters';
-    $availableForValue = $this->getAvailableForValueFromName($availableForName);
-    $letterheads = $this->getLetterheadsFromAvailableFor($availableForValue);
+    $letterheads = $this->getLetterheadsAvailableFor($availableForName);
 
     $this->addListOfLetterheadOptionsToConfig($letterheads);
   }
 
   /**
-   * Returns the "Available For" option value for the given name.
-   *
-   * @param string $optionName
-   *   The name of the "Available For" option to return.
-   * @return array
-   */
-  private function getAvailableForValueFromName($optionName) {
-    $optionValue = civicrm_api3('OptionValue', 'getsingle', [
-      'is_sequential' => '1',
-      'option_group_id' => 'manageletterheads_available_for',
-      'name' => $optionName,
-    ]);
-
-    return $optionValue['value'];
-  }
-
-  /**
-   * Returns all the letterheads that belong to the given "Available For" value.
+   * Returns all the letterheads that belong to the given "Available For".
    *
    * Only active letterheads are returned, sorted by their weight.
    *
-   * @param string $availableForValue
-   *   The "Available For" value to filter letterheads by.
+   * @param string $availableForName
+   *   The "Available For" name to filter letterheads by.
    */
-  private function getLetterheadsFromAvailableFor($availableForValue) {
-    $letterheads = [];
-    $activeLetterheads = civicrm_api3('Letterhead', 'get', [
+  private function getLetterheadsAvailableFor($availableForName) {
+    $availabilityResults = civicrm_api3('LetterheadAvailability', 'get', [
+      'return' => ['letterhead_id'],
+      'available_for' => $availableForName,
+    ]);
+
+    $letterHeadIds = array_column($availabilityResults['values'], 'letterhead_id');
+
+    $letterheadResults = civicrm_api3('Letterhead', 'get', [
       'sequential' => '1',
+      'id' => ['IN' => $letterHeadIds],
       'is_active' => '1',
       'options' => ['sort' => 'weight ASC'],
     ]);
 
-    foreach ($activeLetterheads['values'] as $letterhead) {
-      if (in_array($availableForValue, $letterhead['available_for'])) {
-        $letterheads[] = $letterhead;
-      }
-    }
-
-    return $letterheads;
+    return $letterheadResults['values'];
   }
 
   /**
