@@ -1,6 +1,6 @@
-(($) => {
+(($, crmWysiwyg) => {
   describe('Letterheads Select', () => {
-    let $letterheadSelectRow, $templateSelectRow;
+    let $letterheadSelect, $letterheadSelectRow, $templateSelectRow, $messageEditor;
 
     afterEach(() => {
       $('body').empty();
@@ -54,6 +54,102 @@
       });
     });
 
+    describe('when selecting a letterhead', () => {
+      beforeEach(() => {
+        $('body').append(getEmailFormFixture());
+        $().triggerBlockedOnReadyListeners();
+
+        $letterheadSelect = $(':contains("Select Letterhead")').parents('tr').find('select');
+        $messageEditor = $('.crm-form-wysiwyg');
+
+        crmWysiwyg._create($messageEditor);
+        crmWysiwyg.setVal(
+          $messageEditor,
+          'Example content'
+        );
+        $letterheadSelect.val('2');
+        $letterheadSelect.trigger('change');
+      });
+
+      it('appends the letterhead to the message editor', () => {
+        expect(crmWysiwyg.getVal($messageEditor))
+          .toContain('<p>Welsh Letterhead</p>');
+      });
+
+      it('does not remove any existing content', () => {
+        expect(crmWysiwyg.getVal($messageEditor))
+          .toContain('Example content');
+      });
+    });
+
+    describe('when selecting no letterhead', () => {
+      beforeEach(() => {
+        $('body').append(getEmailFormFixture());
+        $().triggerBlockedOnReadyListeners();
+
+        $letterheadSelect = $(':contains("Select Letterhead")').parents('tr').find('select');
+        $messageEditor = $('.crm-form-wysiwyg');
+
+        crmWysiwyg._create($messageEditor);
+        crmWysiwyg.setVal(
+          $messageEditor,
+          'Example content'
+        );
+        $letterheadSelect.val('2');
+        $letterheadSelect.trigger('change');
+        $letterheadSelect.val('');
+        $letterheadSelect.trigger('change');
+      });
+
+      it('does not contain a letterhead element', () => {
+        expect(crmWysiwyg.getVal($messageEditor))
+          .not.toContain('<p>Welsh Letterhead</p>');
+      });
+
+      it('does not remove any existing content', () => {
+        expect(crmWysiwyg.getVal($messageEditor))
+          .toContain('Example content');
+      });
+    });
+
+    describe('when changing the current template', () => {
+      beforeEach(() => {
+        jasmine.clock().install();
+        $('body').append(getEmailFormFixture());
+
+        $().triggerBlockedOnReadyListeners();
+
+        const $templateSelect = $('[name="template"]');
+        $letterheadSelect = $(':contains("Select Letterhead")').parents('tr').find('select');
+        $messageEditor = $('.crm-form-wysiwyg');
+
+        crmWysiwyg._create($messageEditor);
+        $letterheadSelect.val('2');
+        $letterheadSelect.trigger('change');
+        crmWysiwyg.setVal(
+          $messageEditor,
+          'Template content'
+        );
+        $templateSelect.trigger('change');
+        CKEDITOR.instances.html_message.fire('change');
+        jasmine.clock().tick();
+      });
+
+      afterEach(() => {
+        jasmine.clock().uninstall();
+      });
+
+      it('preserves the letterhead element', () => {
+        expect(crmWysiwyg.getVal($messageEditor))
+          .toContain('<p>Welsh Letterhead</p>');
+      });
+
+      it('does not remove any existing content', () => {
+        expect(crmWysiwyg.getVal($messageEditor))
+          .toContain('Template content');
+      });
+    });
+
     function getEmailFormFixture() {
       return `
         <table>
@@ -66,6 +162,11 @@
           <tr>
             <td></td>
             <td></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <textarea name="html_message" class="crm-form-wysiwyg"></textarea>
+            </td>
           </tr>
         </table>
       `;
@@ -85,9 +186,12 @@
               <td></td>
               <td></td>
             </tr>
+            <td colspan="2">
+              <textarea name="html_message" class="crm-form-wysiwyg"></textarea>
+            </td>
           </table>
         </div>
       `;
     }
   });
-})(CRM.$);
+})(CRM.$, CRM.wysiwyg);
