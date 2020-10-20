@@ -4,6 +4,10 @@
 
     afterEach(() => {
       $('body').empty();
+
+      if (CKEDITOR.instances.html_message) {
+        CKEDITOR.instances.html_message.destroy(true);
+      }
     });
 
     describe('Email Form', () => {
