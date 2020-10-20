@@ -150,6 +150,9 @@
       });
     });
 
+    /**
+     * @returns {string} The HTML fixture needed to mock the Email Form.
+     */
     function getEmailFormFixture() {
       return `
         <table>
@@ -172,6 +175,9 @@
       `;
     }
 
+    /**
+     * @returns {string} The HTML fixture needed to mock the PDF Letter Form.
+     */
     function getPdfFormFixture() {
       return `
         <div class="crm-contact-task-pdf-form-block">
