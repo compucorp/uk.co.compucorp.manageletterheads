@@ -1,6 +1,7 @@
 <?php
 
 use CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown as AddLetterheadDropdown;
+use CRM_ManageLetterheads_Hook_AlterAPIPermissions_AddLetterheadPermissions as AddLetterheadPermissions;
 
 require_once 'manageletterheads.civix.php';
 
@@ -161,5 +162,18 @@ function manageletterheads_civicrm_buildForm($formName, $form) {
 
   foreach ($hooks as $hook) {
     $hook->run($formName, $form);
+  }
+}
+
+/**
+ * Implements hook_civicrm_alterAPIPermissions().
+ */
+function manageletterheads_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
+  $hooks = [
+    new AddLetterheadPermissions(),
+  ];
+
+  foreach ($hooks as $hook) {
+    $hook->run($entity, $action, $params, $permissions);
   }
 }
