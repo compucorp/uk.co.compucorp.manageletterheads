@@ -100,8 +100,13 @@ class CRM_ManageLetterheads_Form_LetterheadForm extends CRM_Core_Form {
    * Displays a success message after the letterhead has been created.
    */
   private function addSuccessMessage() {
+    $isAddAction = $this->_action & CRM_Core_Action::ADD;
+    $successMessage = $isAddAction
+      ? E::ts('New letterhead created')
+      : E::ts('Letterhead saved');
+
     CRM_Core_Session::setStatus(
-      E::ts('Letterhead has been saved.'),
+      $successMessage,
       E::ts('Saved'),
       'success'
     );
