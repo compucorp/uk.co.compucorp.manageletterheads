@@ -54,6 +54,10 @@ class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown {
       'available_for' => $availableForName,
     ]);
 
+    if (empty($availabilityResults['values'])) {
+      return [];
+    }
+
     $letterHeadIds = array_column($availabilityResults['values'], 'letterhead_id');
 
     $letterheadResults = civicrm_api3('Letterhead', 'get', [
