@@ -74,7 +74,9 @@ class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown {
    * Adds the given list of letterheads to a configuration variable.
    *
    * This configuration variable can be accessed by the front-end to build
-   * the dropdown for the letterheads.
+   * the dropdown for the letterheads. The letterheads are provided as a JSON
+   * string to avoid CiviCRM from extending the object instead of replacing
+   * it.
    *
    * The script to build this dropdown is also appended.
    *
@@ -86,7 +88,7 @@ class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown {
       ->addScriptFile('uk.co.compucorp.manageletterheads', 'js/letterheads-dropdown.js')
       ->addSetting([
         'manageletterheads' => [
-          'letterhead_options' => $letterheads,
+          'letterhead_options' => json_encode($letterheads),
         ],
       ]);
   }

@@ -1,6 +1,6 @@
 (() => {
   CRM.manageletterheads = CRM.manageletterheads || {};
-  CRM.manageletterheads.letterhead_options = [
+  CRM.manageletterheads.letterhead_options = JSON.stringify([
     {
       id: '1',
       title: 'Letterhead (English)',
@@ -28,5 +28,5 @@
       is_active: '1',
       weight: '3'
     }
-  ];
+  ]);
 })();
