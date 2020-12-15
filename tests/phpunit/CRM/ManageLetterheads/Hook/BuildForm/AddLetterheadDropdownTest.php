@@ -8,7 +8,7 @@ use CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown as AddLetterheadD
  *
  * @group headless
  */
-class CRM_ManageLetterheads_Hook_AddLetterheadDropdownTest extends BaseHeadlessTest {
+class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdownTest extends BaseHeadlessTest {
 
   /**
    * Tests that email letterheads are added to the CRM config when sending emails.
