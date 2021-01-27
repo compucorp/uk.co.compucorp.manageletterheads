@@ -1,6 +1,7 @@
 (($, crmWysiwyg) => {
   describe('Letterheads Dropdown', () => {
-    let $letterheadDropdown, $letterheadDropdownRow, $templateDropdownRow, $messageEditor;
+    let $letterheadDropdown, $letterheadDropdownRow, $templateDropdownRow,
+      $messageEditor, $subjectField;
 
     afterEach(() => {
       $('body').empty();
@@ -63,6 +64,7 @@
         $('body').append(getEmailFormFixture());
         $().triggerBlockedOnReadyListeners();
 
+        $subjectField = $('[name="subject"]');
         $letterheadDropdown = $(':contains("Select Letterhead")').parents('tr').find('select');
         $messageEditor = $('.crm-form-wysiwyg');
 
@@ -84,6 +86,10 @@
         expect(crmWysiwyg.getVal($messageEditor))
           .toContain('Example content');
       });
+
+      it('updates the subject using the letterhead title', () => {
+        expect($subjectField.val()).toBe('Letterhead (Welsh)');
+      });
     });
 
     describe('when selecting no letterhead', () => {
@@ -91,9 +97,11 @@
         $('body').append(getEmailFormFixture());
         $().triggerBlockedOnReadyListeners();
 
+        $subjectField = $('[name="subject"]');
         $letterheadDropdown = $(':contains("Select Letterhead")').parents('tr').find('select');
         $messageEditor = $('.crm-form-wysiwyg');
 
+        $subjectField.val('Example Subject');
         crmWysiwyg._create($messageEditor);
         crmWysiwyg.setVal(
           $messageEditor,
@@ -113,6 +121,10 @@
       it('does not remove any existing content', () => {
         expect(crmWysiwyg.getVal($messageEditor))
           .toContain('Example content');
+      });
+
+      it('clears the subject', () => {
+        expect($subjectField.val()).toBe('');
       });
     });
 
@@ -152,6 +164,10 @@
         expect(crmWysiwyg.getVal($messageEditor))
           .toContain('Template content');
       });
+
+      it('updates the subject using the letterhead title', () => {
+        expect($subjectField.val()).toBe('Letterhead (Welsh)');
+      });
     });
 
     /**
@@ -167,8 +183,8 @@
             <td><select name="template"></select></td>
           </tr>
           <tr>
-            <td></td>
-            <td></td>
+            <td>Subject</td>
+            <td><input name="subject" /></td>
           </tr>
           <tr>
             <td colspan="2">
@@ -193,8 +209,8 @@
               <td><select name="template"></select></td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
+              <td>Subject</td>
+              <td><input name="subject" /></td>
             </tr>
             <td colspan="2">
               <textarea name="html_message" class="crm-form-wysiwyg"></textarea>
