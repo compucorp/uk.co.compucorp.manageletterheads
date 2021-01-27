@@ -1,6 +1,7 @@
-(($, _, letterheadOptions, ts, crmWysiwyg) => {
+(($, _, ManageLetterheads, ts, crmWysiwyg) => {
   var $htmlMessageEditor, $letterheadDropdown, $templateRow, $templateDropdown,
     isEmailForm;
+  var letterheadOptions = JSON.parse(ManageLetterheads.letterhead_options);
 
   $(document).ready(function () {
     initDomElementReferences();
@@ -171,5 +172,5 @@
    * @property {string} [labelClass] A class that will be applied directly to the label element.
    * @property {string} [labelTdClass] A class that will be applied to the label's parent TD element.
    */
-})(CRM.$, CRM._, CRM.manageletterheads.letterhead_options,
+})(CRM.$, CRM._, CRM.manageletterheads,
   CRM.ts('uk.co.compucorp.manageletterheads'), CRM.wysiwyg);
