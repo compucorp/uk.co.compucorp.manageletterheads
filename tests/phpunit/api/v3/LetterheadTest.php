@@ -35,7 +35,7 @@ class api_v3_LetterheadTest extends BaseHeadlessTest {
     );
 
     civicrm_api3('Letterhead', 'delete', ['id' => $letterhead['id']]);
-    $availabilityCount = civicrm_api3('LetterheadAvailability', 'getcount', ['letterhead_id' => $letterhead['id']])['result'];
+    $availabilityCount = civicrm_api3('LetterheadAvailability', 'getcount', ['letterhead_id' => $letterhead['id']]);
     $this->assertEquals(0, $availabilityCount);
   }
 
