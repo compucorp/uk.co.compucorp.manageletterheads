@@ -110,7 +110,7 @@ class CRM_ManageLetterheads_Page_LetterheadsListPage extends CRM_Core_Page {
       $letterhead['available_for']
     );
 
-    $letterhead['available_for_text'] = implode($availableForLabels, ', ');
+    $letterhead['available_for_text'] = implode(', ', $availableForLabels);
     $letterhead['actions'] = $this->getLetterheadActions($letterhead);
     $letterhead['is_active_text'] = $letterhead['is_active'] === '1'
       ? E::ts('Yes')

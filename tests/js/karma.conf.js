@@ -28,7 +28,7 @@ module.exports = function (config) {
       'bower_components/ckeditor/lang/en.js',
       'bower_components/ckeditor/styles.js',
       'js/wysiwyg/crm.wysiwyg.js',
-      'js/wysiwyg/crm.ckeditor.js',
+      'ext/ckeditor4/js/crm.ckeditor.js',
       { pattern: 'bower_components/ckeditor/**/*.css' },
 
       // Source Files
