@@ -6,7 +6,7 @@ use CRM_ManageLetterheads_Uninstall_DeleteNavigationItem as DeleteNavigationItem
 /**
  * Collection of upgrade steps.
  */
-class CRM_ManageLetterheads_Upgrader extends CRM_ManageLetterheads_Upgrader_Base {
+class CRM_ManageLetterheads_Upgrader extends CRM_Extension_Upgrader_Base {
 
   /**
    * A list of directories to be scanned for XML installation files
