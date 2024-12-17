@@ -28,7 +28,7 @@ class CRM_ManageLetterheads_Hook_BuildForm_AddLetterheadDropdown {
    */
   public function run ($formName, $form) {
     $this->isPdfLetterForm = get_class($form) === CRM_Contact_Form_Task_PDF::class;
-    $this->isEmailForm = get_class($form) === CRM_Contact_Form_Task_Email::class;
+    $this->isEmailForm = in_array(get_class($form), [CRM_Contact_Form_Task_Email::class, CRM_Case_Form_Task_Email::class]);
 
     if (!$this->shouldRun()) {
       return;
