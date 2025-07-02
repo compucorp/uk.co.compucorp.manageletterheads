@@ -43,8 +43,8 @@ function manageletterheads_civicrm_enable() {
  */
 function manageletterheads_civicrm_permission(&$permissions) {
   $permissions['manage letterheads'] = [
-    ts('CiviCRM: manage letterheads'),
-    ts('Allows managing of a list of letterheads that can be selected by users when creating emails and PDF letters'),
+    'label' => ts('CiviCRM: manage letterheads'),
+    'description' => ts('Allows managing of a list of letterheads that can be selected by users when creating emails and PDF letters'),
   ];
 }
 
