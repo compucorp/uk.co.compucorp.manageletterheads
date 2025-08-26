@@ -1,6 +1,6 @@
 (($, _, ManageLetterheads, ts, crmWysiwyg) => {
-  var $htmlMessageEditor, $letterheadDropdown, $templateRow, $templateDropdown,
-    isEmailForm;
+  var $htmlMessageEditor, $letterheadDropdown, $subjectField, $templateRow,
+    $templateDropdown, isEmailForm;
   var letterheadOptions = JSON.parse(ManageLetterheads.letterhead_options);
 
   $(document).ready(function () {
@@ -43,11 +43,10 @@
    * Appends the letterhead for the given ID to the message editor. Removes
    * any previous letterhead references.
    *
-   * @param {string} letterheadId the letterhead's ID to append to the message
+   * @param {string} letterheadContent the letterhead's content to append to the message
    * editor.
    */
-  function appendLetterheadToMessage (letterheadId) {
-    var letterheadContent = _.find(letterheadOptions, { id: letterheadId }).content;
+  function appendLetterheadToMessage (letterheadContent) {
     var letterheadHtml = $('<div class="letterhead-element">' + letterheadContent + '</div>');
     var $messageContent = getMessageDomContent();
 
@@ -85,15 +84,23 @@
   }
 
   /**
-   * Appends the selected letterhead. Removes any existing letterhead when
+   * Handles the events triggered by changing the letterhead:
+   *
+   * - Appends the selected letterhead. Removes any existing letterhead when
    * selecting "None".
+   * - Changes the subject using the letterhead title. Clears the subject
+   * when selecting "None".
    */
   function handleLetterheadChange () {
     var letterheadId = $letterheadDropdown.val();
 
     if (letterheadId) {
-      appendLetterheadToMessage(letterheadId);
+      var letterhead = _.find(letterheadOptions, { id: letterheadId });
+
+      $subjectField.val(letterhead.title);
+      appendLetterheadToMessage(letterhead.content);
     } else {
+      $subjectField.val('');
       removeLetterheadFromMessage();
     }
   }
@@ -113,11 +120,12 @@
       return;
     }
 
+    var letterhead = _.find(letterheadOptions, { id: letterheadId });
     var messageEditorListener = CKEDITOR.instances.html_message
       .on('change', function () {
         messageEditorListener.removeListener();
         setTimeout(function () {
-          appendLetterheadToMessage(letterheadId);
+          appendLetterheadToMessage(letterhead.content);
         });
       });
   }
@@ -133,6 +141,7 @@
     var $emailTemplateRow = $('.crm-contactEmail-form-block-template');
     var $pdfTemplateRow = $('select[name="template"]').parents('tr');
 
+    $subjectField = $('[name="subject"]');
     $templateDropdown = $('[name="template"]');
     $htmlMessageEditor = $('[name="html_message"]');
     isEmailForm = $emailTemplateRow.length > 0;
